@@ -1,0 +1,120 @@
+:root {
+    --color-blue: #87CEEB;
+    --color-light-blue: #BFE6F8;
+    --color-green: #90EE90;
+    --color-yellow: #FFFFE0;
+    --color-text: #333;
+    --color-background: #F5F5F5;
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: var(--color-blue);
+    padding: 1rem;
+    text-align: center;
+}
+h1 {
+    margin: 0;
+    color: white;
+}
+nav {
+    background-color: var(--color-light-blue);
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+nav ul li {
+    margin: 0 1rem;
+}
+nav ul li a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+main {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+}
+.form-container {
+    display: flex;
+    justify-content: space-between;
+}
+.form-section {
+    width: 45%;
+}
+form {
+    display: flex;
+    flex-direction: column;
+}
+label {
+    margin-top: 1rem;
+}
+input[type="text"], input[type="password"], input[type="email"] {
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+input[type="submit"] {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: var(--color-blue);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+input[type="submit"]:hover {
+    background-color: var(--color-green);
+}
+footer {
+    background-color: var(--color-blue);
+    text-align: center;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+footer a {
+    color: var(--color-yellow);
+}
+.fa-bars {
+    display: none;
+}
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+    }
+    .form-section {
+        width: 100%;
+    }
+    nav ul {
+        display: none;
+    }
+    .fa-bars {
+        display: block;
+        margin: 0.25rem 1rem;
+    }
+    footer {
+        position: static;
+        padding: 0.25rem;
+    }
+}
