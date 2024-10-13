@@ -34,3 +34,10 @@ Imagine turning the mundane task of cleaning into a thrilling business adventure
 - **Login:** My application contains a basic login form for users to use right as they land on the webpage. This will be fully functional in the future. There is also a spot on the play page where the username of the current user is displayed.
 - **Database:** The leaderboard page will be referring to the database so placeholders have been set up to show what the leaderboard will look like in the future.
 - **Websockets:** The leaderboard page will also be using websockets to make the data available to all players and update live as more money is gained by users.
+## CSS Deliverable
+- **Header, footer, and main content body:** My application contains these items for each page. I made sure they were consistent across each page.
+- **Navigation elements:** My navigation elements are consistent across each page. I changed their color, positioning, and responsiveness to window resizing.
+- **Responsive to window resizing:** The navigation elements, as previously mentioned, disappear when the window gets too small and a menu icon appears. The login and register forms, store items on the game page, and the achievements resize and move as the window gets smaller.
+- **Application elements:** Used a consistent style to make the page elements, cards, buttons, and text. 
+- **Application text content:** All the text in the app is consistent in font, style, and placement. It also resizes, moves, and disappears as needed.
+- **Application images:** The application has images for all the store items and one for each achievement. The store items are AI generated. I made sure to maintain a consistent size and made the images circular.
