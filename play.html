@@ -5,156 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rags to Riches</title>
     <script src="https://kit.fontawesome.com/8904740873.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/play.css">
 </head>
 <body>
     <header>
         <h1>Rags to Riches</h1>
-        <hr>
-        <nav>
-            <i class="fa-solid fa-bars"></i>
-            <ul>
-                <li><a href="play.html">Play</a></li>
-                <li><a href="leaderboard.html">Leaderboard</a></li>
-                <li><a href="achievements.html">Achievements</a></li>
-                <li><a href="index.html">Logout</a></li>
-            </ul>
-            <p>Current logged-in username</p>
-        </nav>
     </header>
+    <nav>
+        <i class="fa-solid fa-bars"></i>
+        <ul class="nav-list">
+            <li><a href="play.html">Play</a></li>
+            <li><a href="leaderboard.html">Leaderboard</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+        </ul>
+        <ul class="account-info">
+            <li><a href="index.html">Logout</a></li>
+            <li class="username">username</li>
+        </ul>
+    </nav>
     <main>
-        <h1>$1,456,983</h1>
-        <div>
-            <div>
-                <img src="assets/basic_rag.png" alt="Basic rag" width="100" height="100">
-                <div>
-                    <p>Old Rag</p>
+        <div class="money-display">$1,456,983</div>
+        <div class="items-container">
+            <div class="item-column">
+                <div class="column-header">
+                    <h2>Rags</h2>
+                    <p class="subtext">$1,000 per tick</p>
+                </div>
+                <div class="item-card">
+                    <img src="/assets/old_rag.jpeg?height=80&width=80" alt="Old Rag">
+                    <h3>Old Rag</h3>
                     <p>Earn $0.30 every tick</p>
-                    <p>$1</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$1</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_rag.png" alt="Basic rag" width="100" height="100">
-                <div>
-                    <p>Basic Rag</p>
+                <div class="item-card">
+                    <img src="/assets/basic_rag.jpeg?height=80&width=80" alt="Basic Rag">
+                    <h3>Basic Rag</h3>
                     <p>Earn $1 every tick</p>
-                    <p>$15</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$15</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_rag.png" alt="Basic rag" width="100" height="100">
-                <div>
-                    <p>High Quality Rag</p>
+                <div class="item-card">
+                    <img src="/assets/high_quality_rag.jpeg?height=80&width=80" alt="High Quality Rag">
+                    <h3>High Quality Rag</h3>
                     <p>Earn $5 every tick</p>
-                    <p>$50</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$50</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_rag.png" alt="Basic rag" width="100" height="100">
-                <div>
-                    <p>Super Rag</p>
+                <div class="item-card">
+                    <img src="/assets/super_rag.jpeg?height=80&width=80" alt="Super Rag">
+                    <h3>Super Rag</h3>
                     <p>Earn $100 every tick</p>
-                    <p>$5000</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$5000</p>
+                    <p class="owned">You have: 0</p>
                 </div>
             </div>
-        </div>
-        <div>
-            <div>
-                <img src="assets/basic_soap.png" alt="Basic soap" width="100" height="100">
-                <div>
-                    <p>Watery Soap</p>
+            <div class="item-column">
+                <div class="column-header">
+                    <h2>Soaps</h2>
+                    <p class="subtext">1.5x money multiplier</p>
+                </div>
+                <div class="item-card">
+                    <img src="/assets/watery_soap.jpeg?height=80&width=80" alt="Watery Soap">
+                    <h3>Watery Soap</h3>
                     <p>Increase earning multiplier by 0.1%</p>
-                    <p>$5</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$5</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_soap.png" alt="Basic soap" width="100" height="100">
-                <div>
-                    <p>Basic Soap</p>
+                <div class="item-card">
+                    <img src="/assets/basic_soap.jpeg?height=80&width=80" alt="Basic Soap">
+                    <h3>Basic Soap</h3>
                     <p>Increase earning multiplier by 1%</p>
-                    <p>$50</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$50</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_soap.png" alt="Basic soap" width="100" height="100">
-                <div>
-                    <p>High Quality Soap</p>
+                <div class="item-card">
+                    <img src="/assets/high_quality_soap.jpeg?height=80&width=80" alt="High Quality Soap">
+                    <h3>High Quality Soap</h3>
                     <p>Increase earning multiplier by 5%</p>
-                    <p>$115</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$115</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_soap.png" alt="Basic soap" width="100" height="100">
-                <div>
-                    <p>Super Soap</p>
+                <div class="item-card">
+                    <img src="/assets/super_soap.jpeg?height=80&width=80" alt="Super Soap">
+                    <h3>Super Soap</h3>
                     <p>Increase earning multiplier by 100%</p>
-                    <p>$250,000</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$250,000</p>
+                    <p class="owned">You have: 0</p>
                 </div>
             </div>
-        </div>
-        <div>
-            <div>
-                <img src="assets/basic_worker.png" alt="Basic worker" width="100" height="100">
-                <div>
-                    <p>Lazy Worker</p>
+            <div class="item-column">
+                <div class="column-header">
+                    <h2>Workers</h2>
+                    <p class="subtext">5 ticks per second</p>
+                </div>
+                <div class="item-card">
+                    <img src="/assets/lazy_worker.jpeg?height=80&width=80" alt="Lazy Worker">
+                    <h3>Lazy Worker</h3>
                     <p>Increase ticks/second by 0.2</p>
-                    <p>$100</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$100</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_worker.png" alt="Basic worker" width="100" height="100">
-                <div>
-                    <p>Basic Worker</p>
+                <div class="item-card">
+                    <img src="/assets/basic_worker.jpeg?height=80&width=80" alt="Basic Worker">
+                    <h3>Basic Worker</h3>
                     <p>Increase ticks/second by 1</p>
-                    <p>$500</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$500</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_worker.png" alt="Basic worker" width="100" height="100">
-                <div>
-                    <p>Hard Worker</p>
+                <div class="item-card">
+                    <img src="/assets/hard_worker.jpeg?height=80&width=80" alt="Hard Worker">
+                    <h3>Hard Worker</h3>
                     <p>Increase ticks/second by 50</p>
-                    <p>$100,000</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$100,000</p>
+                    <p class="owned">You have: 0</p>
                 </div>
-            </div>
-            <div>
-                <img src="assets/basic_worker.png" alt="Basic worker" width="100" height="100">
-                <div>
-                    <p>Super Worker</p>
+                <div class="item-card">
+                    <img src="/assets/super_worker.jpeg?height=80&width=80" alt="Super Worker">
+                    <h3>Super Worker</h3>
                     <p>Increase ticks/second by 1000</p>
-                    <p>$350,000,000</p>
-                    <input type="button" value="Buy">
-                    <p>You have purchased: 0</p>
+                    <p class="price">$350,000,000</p>
+                    <p class="owned">You have: 0</p>
                 </div>
             </div>
         </div>
     </main>
-    <hr>
-    <footer>
+    <div class="ticker">
         <p>Random fact for entertainment sliding across the bottom of the screen</p>
-        <hr>
+    </div>
+    <footer>
         <p>A game by Porter Schollenberger - <a href="https://github.com/porterschollenberger/startup">GitHub</a></p>
     </footer>
+    <script>
+        document.querySelectorAll('.item-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const success = Math.random() > 0.5;
+                if (success) {
+                    this.classList.add('purchase-success');
+                } else {
+                    this.classList.add('purchase-fail');
+                }
+                setTimeout(() => {
+                    this.classList.remove('purchase-success', 'purchase-fail');
+                }, 500);
+            });
+        });
+    </script>
 </body>
 </html>
