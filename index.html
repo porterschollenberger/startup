@@ -5,32 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rags to Riches</title>
     <script src="https://kit.fontawesome.com/8904740873.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/index.css">
 </head>
 <body>
     <header>
         <h1>Rags to Riches</h1>
-        <hr>
-        <nav>
-            <i class="fa-solid fa-bars"></i>
-            <ul>
-                <li><a href="play.html">Play</a></li>
-                <li><a href="leaderboard.html">Leaderboard</a></li>
-                <li><a href="achievements.html">Achievements</a></li>
-                <li><a href="index.html">Logout</a></li>
-            </ul>
-        </nav>
     </header>
+    <nav>
+        <i class="fa-solid fa-bars"></i>
+        <ul>
+            <li><a href="play.html">Play</a></li>
+            <li><a href="leaderboard.html">Leaderboard</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+        </ul>
+        <ul>
+            <li><a href="index.html">Login/Register</a></li>
+        </ul>
+    </nav>
     <main>
-        <form>
-            <label for="Email">Email</label>
-            <input type="text" name="Email" id="Email" placeholder="example@email.com">
-            <label for="Password">Password</label>
-            <input type="password" name="Password" id="Password" placeholder="password">
-            <a href="play.html"><input type="button" value="Submit"></a>
-        </form>
+        <div class="form-container">
+            <div class="form-section">
+                <h2>Login</h2>
+                <form action="play.html" method="get">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" name="loginEmail" id="loginEmail" placeholder="example@email.com" required>
+                    <label for="loginPassword">Password</label>
+                    <input type="password" name="loginPassword" id="loginPassword" placeholder="Password" required>
+                    <input type="submit" value="Login">
+                </form>
+            </div>
+            <div class="form-section">
+                <h2>Register</h2>
+                <form action="play.html" method="get">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" name="registerEmail" id="registerEmail" placeholder="example@email.com" required>
+                    <label for="registerPassword">Password</label>
+                    <input type="password" name="registerPassword" id="registerPassword" placeholder="Password" required>
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+                    <input type="submit" value="Register">
+                </form>
+            </div>
+        </div>
     </main>
     <footer>
-        <hr>
         <p>A game by Porter Schollenberger - <a href="https://github.com/porterschollenberger/startup">GitHub</a></p>
     </footer>
 </body>
