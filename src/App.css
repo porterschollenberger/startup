@@ -1,0 +1,25 @@
+:root {
+    --color-blue: #87CEEB;
+    --color-light-blue: #BFE6F8;
+    --color-green: #90EE90;
+    --color-yellow: #FFFFE0;
+    --color-text: #333;
+    --color-background: #F5F5F5;
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    margin: 0;
+    padding: 0;
+}
+.App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+    flex: 1;
+    padding: 2rem;
+}
