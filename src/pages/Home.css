@@ -46,15 +46,4 @@ input[type="submit"]:hover {
     .form-section {
         width: 100%;
     }
-    nav ul {
-        display: none;
-    }
-    .fa-bars {
-        display: block;
-        margin: 0.25rem 1rem;
-    }
-    footer {
-        position: static;
-        padding: 0.25rem;
-    }
 }

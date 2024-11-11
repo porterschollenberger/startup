@@ -19,3 +19,18 @@ nav ul li a {
     color: var(--color-text);
     text-decoration: none;
 }
+.fa-bars {
+    display: none;
+}
+@media (max-width: 768px) {
+    .nav-list {
+        display: none;
+    }
+    .account-info li:nth-child(1) {
+        display: none;
+    }
+    .fa-bars {
+        display: block;
+        margin: 0.25rem 1rem;
+    }
+}

@@ -77,16 +77,6 @@ main {
     .item-column {
         width: 100%;
     }
-    .nav-list {
-        display: none;
-    }
-    .account-info li:nth-child(1) {
-        display: none;
-    }
-    .fa-bars {
-        display: block;
-        margin: 0.25rem 1rem;
-    }
 }
 @keyframes purchaseSuccess {
     0% { transform: scale(1); background-color: white; }

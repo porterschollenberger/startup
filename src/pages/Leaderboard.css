@@ -1,3 +1,9 @@
+:root {
+    --color-gold: #FFD700;
+    --color-silver: #C0C0C0;
+    --color-bronze: #CD7F32;
+}
+
 main {
     max-width: 800px;
     margin: 2rem auto;
@@ -66,16 +72,4 @@ main {
 }
 .pagination button:hover {
     background-color: var(--color-green);
-}
-@media (max-width: 768px) {
-    .nav-list {
-        display: none;
-    }
-    .account-info li:nth-child(1) {
-        display: none;
-    }
-    .fa-bars {
-        display: block;
-        margin: 0.25rem 1rem;
-    }
 }
