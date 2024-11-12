@@ -3,7 +3,7 @@ import './Achievements.css';
 
 function Achievements() {
     return (
-        <main>
+        <main className="achievement-page">
             <h1 className="achievements-title">Achievements</h1>
             <div className="achievements-grid">
                 <div className="achievement">

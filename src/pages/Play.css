@@ -1,7 +1,8 @@
-main {
+main.play-page {
     max-width: 1200px;
-    margin: 2rem auto;
-    padding: 1rem;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
 }
 .money-display {
     font-size: 4rem;
@@ -70,12 +71,17 @@ main {
     font-style: italic;
     color: #666;
 }
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .items-container {
         flex-direction: column;
     }
     .item-column {
         width: 100%;
+    }
+}
+@media (max-width: calc(1200px + 4rem)) {
+    main.play-page {
+        width: calc(100% - 4rem);
     }
 }
 @keyframes purchaseSuccess {

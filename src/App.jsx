@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
+import Ticker from './components/Ticker';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Play from './pages/Play';
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/leaderboard" element={<Leaderboard />} />
                     <Route path="/achievements" element={<Achievements />} />
                 </Routes>
+                <Ticker />
                 <Footer />
             </div>
         </Router>

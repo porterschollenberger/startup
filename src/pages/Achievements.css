@@ -1,10 +1,5 @@
-main {
+main.achievement-page {
     max-width: 1200px;
-    margin: 2rem auto;
-    padding: 1rem;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 4px;
 }
 .achievements-title {
     text-align: center;
@@ -53,6 +48,11 @@ main {
 @media (max-width: 1200px) {
     .achievement {
         flex: 0 0 calc(25% - 1rem);
+    }
+}
+@media (max-width: calc(1200px + 4rem)) {
+    main.achievement-page {
+        max-width: calc(100% - 4rem);
     }
 }
 @media (max-width: 900px) {

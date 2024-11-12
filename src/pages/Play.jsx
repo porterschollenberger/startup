@@ -3,7 +3,7 @@ import './Play.css';
 
 function Play() {
     return (
-        <main>
+        <main className="play-page">
             <div className="money-display">$1,456,983</div>
             <div className="items-container">
                 <div className="item-column">

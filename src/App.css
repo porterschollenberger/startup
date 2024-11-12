@@ -5,6 +5,9 @@
     --color-yellow: #FFFFE0;
     --color-text: #333;
     --color-background: #F5F5F5;
+    --color-gold: #FFD700;
+    --color-silver: #C0C0C0;
+    --color-bronze: #CD7F32;
 }
 body {
     font-family: Arial, sans-serif;
@@ -22,4 +25,9 @@ body {
 main {
     flex: 1;
     padding: 2rem;
+    margin: 2rem auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    width: 100%;
 }

@@ -1,10 +1,5 @@
-main {
+main.home-page {
     max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 4px;
 }
 .form-container {
     display: flex;
@@ -39,11 +34,16 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: var(--color-green);
 }
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .form-container {
         flex-direction: column;
     }
     .form-section {
         width: 100%;
+    }
+}
+@media (max-width: calc(600px + 4rem)) {
+    main.home-page {
+        width: calc(100% - 4rem);
     }
 }

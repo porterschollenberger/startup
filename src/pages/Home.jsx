@@ -3,7 +3,7 @@ import './Home.css';
 
 function Home() {
     return (
-        <main>
+        <main className="home-page">
             <div className="form-container">
                 <div className="form-section">
                     <h2>Login</h2>

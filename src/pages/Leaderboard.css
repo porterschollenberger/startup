@@ -1,16 +1,5 @@
-:root {
-    --color-gold: #FFD700;
-    --color-silver: #C0C0C0;
-    --color-bronze: #CD7F32;
-}
-
-main {
+main.leaderboard-page {
     max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 4px;
 }
 .leaderboard-title {
     text-align: center;
@@ -72,4 +61,9 @@ main {
 }
 .pagination button:hover {
     background-color: var(--color-green);
+}
+@media (max-width: calc(800px + 4rem)) {
+    main.leaderboard-page {
+        width: calc(100% - 4rem);
+    }
 }
