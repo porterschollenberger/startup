@@ -2,32 +2,56 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './Play.css';
 
 function Play() {
-    const [money, setMoney] = useState(1);
-    const [moneyPerTick, setMoneyPerTick] = useState(0);
-    const [moneyMultiplier, setMoneyMultiplier] = useState(1);
-    const [ticksPerSecond, setTicksPerSecond] = useState(1);
-    const [animatingItems, setAnimatingItems] = useState({});
+    const loadGameState = () => {
+        const savedState = localStorage.getItem('gameState');
+        if (savedState) {
+            return JSON.parse(savedState);
+        }
+        return null;
+    }
 
-    const [items, setItems] = useState({
-        rags: [
-            { name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30 },
-            { name: "Basic Rag", basePrice: 15, owned: 0, moneyPerTick: 1 },
-            { name: "High Quality Rag", basePrice: 50, owned: 0, moneyPerTick: 5 },
-            { name: "Super Rag", basePrice: 5000, owned: 0, moneyPerTick: 100 },
-        ],
-        soaps: [
-            { name: "Watery Soap", basePrice: 5, owned: 0, multiplierIncrease: 0.001 },
-            { name: "Basic Soap", basePrice: 50, owned: 0, multiplierIncrease: 0.01 },
-            { name: "High Quality Soap", basePrice: 115, owned: 0, multiplierIncrease: 0.05 },
-            { name: "Super Soap", basePrice: 250000, owned: 0, multiplierIncrease: 1 },
-        ],
-        workers: [
-            { name: "Lazy Worker", basePrice: 100, owned: 0, tickIncrease: 0.2 },
-            { name: "Basic Worker", basePrice: 500, owned: 0, tickIncrease: 1 },
-            { name: "Hard Worker", basePrice: 100000, owned: 0, tickIncrease: 50 },
-            { name: "Super Worker", basePrice: 350000000, owned: 0, tickIncrease: 1000 },
-        ],
+    const [money, setMoney] = useState(() => {
+        const savedState = loadGameState();
+        return savedState ? savedState.money : 1;
     });
+    const [moneyPerTick, setMoneyPerTick] = useState(() => {
+        const savedState = loadGameState();
+        return savedState ? savedState.moneyPerTick : 0;
+    });
+    const [moneyMultiplier, setMoneyMultiplier] = useState(() => {
+        const savedState = loadGameState();
+        return savedState ? savedState.moneyMultiplier : 1;
+    });
+    const [ticksPerSecond, setTicksPerSecond] = useState(() => {
+        const savedState = loadGameState();
+        return savedState ? savedState.ticksPerSecond : 1;
+    });
+
+    const [items, setItems] = useState(() => {
+        const savedState = loadGameState();
+        return savedState ? savedState.items : {
+            rags: [
+                {name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30},
+                {name: "Basic Rag", basePrice: 15, owned: 0, moneyPerTick: 1},
+                {name: "High Quality Rag", basePrice: 50, owned: 0, moneyPerTick: 5},
+                {name: "Super Rag", basePrice: 5000, owned: 0, moneyPerTick: 100},
+            ],
+            soaps: [
+                {name: "Watery Soap", basePrice: 5, owned: 0, multiplierIncrease: 0.001},
+                {name: "Basic Soap", basePrice: 50, owned: 0, multiplierIncrease: 0.01},
+                {name: "High Quality Soap", basePrice: 115, owned: 0, multiplierIncrease: 0.05},
+                {name: "Super Soap", basePrice: 250000, owned: 0, multiplierIncrease: 1},
+            ],
+            workers: [
+                {name: "Lazy Worker", basePrice: 100, owned: 0, tickIncrease: 0.2},
+                {name: "Basic Worker", basePrice: 500, owned: 0, tickIncrease: 1},
+                {name: "Hard Worker", basePrice: 100000, owned: 0, tickIncrease: 50},
+                {name: "Super Worker", basePrice: 350000000, owned: 0, tickIncrease: 1000},
+            ],
+        }
+    });
+
+    const [animatingItems, setAnimatingItems] = useState({});
 
     const updateMoney = useCallback(() => {
         setMoney(prevMoney => prevMoney + moneyPerTick * moneyMultiplier);
@@ -76,6 +100,15 @@ function Play() {
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
     };
+
+    const saveGameState = () => {
+      const gameState = { money, moneyPerTick, moneyMultiplier, ticksPerSecond, items };
+      localStorage.setItem('gameState', JSON.stringify(gameState));
+    };
+
+    useEffect(() => {
+        saveGameState();
+    }, [money, moneyPerTick, moneyMultiplier, ticksPerSecond, items]);
 
     return (
         <main className="play-page">
