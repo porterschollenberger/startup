@@ -133,7 +133,7 @@ function Play() {
                                 }`}
                                 onClick={() => buyItem(category, index)}
                             >
-                                <img src={`/assets/${item.name.toLowerCase().replace(/ /g, '_')}.jpeg?height=80&width=80`} alt={item.name} draggable="false"/>
+                                <img src={`/${item.name.toLowerCase().replace(/ /g, '_')}.jpeg?height=80&width=80`} alt={item.name} draggable="false"/>
                                 <h3>{item.name}</h3>
                                 <p>
                                     {category === 'rags' && `Earn ${formatMoney(item.moneyPerTick)} every tick`}

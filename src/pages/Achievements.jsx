@@ -5,7 +5,7 @@ import './Achievements.css';
 function AchievementItem({ title, description, unlocked }) {
     return (
         <div className={`achievement ${unlocked ? '' : 'locked'}`}>
-            <img src="/assets/achievement.png?height=50&width=50" alt={title} />
+            <img src="/achievement.png?height=50&width=50" alt={title} />
             <h3>{title}</h3>
             <p>{description}</p>
         </div>
