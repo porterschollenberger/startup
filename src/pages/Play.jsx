@@ -1,113 +1,118 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Play.css';
 
 function Play() {
+    const [money, setMoney] = useState(1);
+    const [moneyPerTick, setMoneyPerTick] = useState(0);
+    const [moneyMultiplier, setMoneyMultiplier] = useState(1);
+    const [ticksPerSecond, setTicksPerSecond] = useState(1);
+    const [animatingItems, setAnimatingItems] = useState({});
+
+    const [items, setItems] = useState({
+        rags: [
+            { name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30 },
+            { name: "Basic Rag", basePrice: 15, owned: 0, moneyPerTick: 1 },
+            { name: "High Quality Rag", basePrice: 50, owned: 0, moneyPerTick: 5 },
+            { name: "Super Rag", basePrice: 5000, owned: 0, moneyPerTick: 100 },
+        ],
+        soaps: [
+            { name: "Watery Soap", basePrice: 5, owned: 0, multiplierIncrease: 0.001 },
+            { name: "Basic Soap", basePrice: 50, owned: 0, multiplierIncrease: 0.01 },
+            { name: "High Quality Soap", basePrice: 115, owned: 0, multiplierIncrease: 0.05 },
+            { name: "Super Soap", basePrice: 250000, owned: 0, multiplierIncrease: 1 },
+        ],
+        workers: [
+            { name: "Lazy Worker", basePrice: 100, owned: 0, tickIncrease: 0.2 },
+            { name: "Basic Worker", basePrice: 500, owned: 0, tickIncrease: 1 },
+            { name: "Hard Worker", basePrice: 100000, owned: 0, tickIncrease: 50 },
+            { name: "Super Worker", basePrice: 350000000, owned: 0, tickIncrease: 1000 },
+        ],
+    });
+
+    const updateMoney = useCallback(() => {
+        setMoney(prevMoney => prevMoney + moneyPerTick * moneyMultiplier);
+    }, [moneyPerTick, moneyMultiplier]);
+
+    useEffect(() => {
+        const interval = setInterval(updateMoney, 1000 / ticksPerSecond);
+        return () => clearInterval(interval);
+    }, [updateMoney, ticksPerSecond]);
+
+    const buyItem = (category, index) => {
+        const item = items[category][index];
+        const price = Math.floor(item.basePrice * Math.pow(1.15, item.owned));
+
+        if (money >= price) {
+            setMoney(prevMoney => prevMoney - price);
+            setItems(prevItems => {
+                const newItems = {...prevItems};
+                newItems[category][index] = {
+                    ...item,
+                    owned: item.owned + 1,
+                };
+                return newItems;
+            });
+
+            if (category === 'rags') {
+                setMoneyPerTick(prevMoney => prevMoney + item.moneyPerTick);
+            } else if (category === 'soaps') {
+                setMoneyMultiplier(prevMultiplier => prevMultiplier + item.multiplierIncrease);
+            } else if (category === 'workers') {
+                setTicksPerSecond(prevTicks => prevTicks + item.tickIncrease);
+            }
+
+            setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: 'success' }));
+            setTimeout(() => {
+                setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: null }));
+            }, 500);
+        } else {
+            setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: 'fail' }));
+            setTimeout(() => {
+                setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: null }));
+            }, 500);
+        }
+    };
+
+    const formatMoney = (amount) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    };
+
     return (
         <main className="play-page">
-            <div className="money-display">$1,456,983</div>
+            <div className="money-display">{formatMoney(money)}</div>
             <div className="items-container">
-                <div className="item-column">
-                    <div className="column-header">
-                        <h2>Rags</h2>
-                        <p className="subtext">$1,000 per tick</p>
+                {Object.entries(items).map(([category, categoryItems]) => (
+                    <div key={category} className="item-column">
+                        <div className="column-header">
+                            <h2>{category.charAt(0).toUpperCase() + category.slice(1)}</h2>
+                            <p className="subtext">
+                                {category === 'rags' && `${formatMoney(moneyPerTick)} per tick`}
+                                {category === 'soaps' && `${moneyMultiplier.toFixed(2)}x money multiplier`}
+                                {category === 'workers' && `${ticksPerSecond.toFixed(1)} ticks per second`}
+                            </p>
+                        </div>
+                        {categoryItems.map((item, index) => (
+                            <div
+                                key={item.name}
+                                className={`item-card ${
+                                    animatingItems[`${category}-${index}`] === 'success' ? 'purchase-success' :
+                                        animatingItems[`${category}-${index}`] === 'fail' ? 'purchase-fail' : ''
+                                }`}
+                                onClick={() => buyItem(category, index)}
+                            >
+                                <img src={`/assets/${item.name.toLowerCase().replace(/ /g, '_')}.jpeg?height=80&width=80`} alt={item.name} draggable="false"/>
+                                <h3>{item.name}</h3>
+                                <p>
+                                    {category === 'rags' && `Earn ${formatMoney(item.moneyPerTick)} every tick`}
+                                    {category === 'soaps' && `Increase earning multiplier by ${(item.multiplierIncrease * 100).toFixed(1)}%`}
+                                    {category === 'workers' && `Increase ticks/second by ${item.tickIncrease}`}
+                                </p>
+                                <p className="price">{formatMoney(Math.floor(item.basePrice * Math.pow(1.15, item.owned)))}</p>
+                                <p className="owned">You have: {item.owned}</p>
+                            </div>
+                        ))}
                     </div>
-                    <div className="item-card">
-                        <img src="/assets/old_rag.jpeg?height=80&width=80" alt="Old Rag"/>
-                        <h3>Old Rag</h3>
-                        <p>Earn $0.30 every tick</p>
-                        <p className="price">$1</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/basic_rag.jpeg?height=80&width=80" alt="Basic Rag"/>
-                        <h3>Basic Rag</h3>
-                        <p>Earn $1 every tick</p>
-                        <p className="price">$15</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/high_quality_rag.jpeg?height=80&width=80" alt="High Quality Rag"/>
-                        <h3>High Quality Rag</h3>
-                        <p>Earn $5 every tick</p>
-                        <p className="price">$50</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/super_rag.jpeg?height=80&width=80" alt="Super Rag"/>
-                        <h3>Super Rag</h3>
-                        <p>Earn $100 every tick</p>
-                        <p className="price">$5000</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                </div>
-                <div className="item-column">
-                    <div className="column-header">
-                        <h2>Soaps</h2>
-                        <p className="subtext">1.5x money multiplier</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/watery_soap.jpeg?height=80&width=80" alt="Watery Soap"/>
-                        <h3>Watery Soap</h3>
-                        <p>Increase earning multiplier by 0.1%</p>
-                        <p className="price">$5</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/basic_soap.jpeg?height=80&width=80" alt="Basic Soap"/>
-                        <h3>Basic Soap</h3>
-                        <p>Increase earning multiplier by 1%</p>
-                        <p className="price">$50</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/high_quality_soap.jpeg?height=80&width=80" alt="High Quality Soap"/>
-                        <h3>High Quality Soap</h3>
-                        <p>Increase earning multiplier by 5%</p>
-                        <p className="price">$115</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/super_soap.jpeg?height=80&width=80" alt="Super Soap"/>
-                        <h3>Super Soap</h3>
-                        <p>Increase earning multiplier by 100%</p>
-                        <p className="price">$250,000</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                </div>
-                <div className="item-column">
-                    <div className="column-header">
-                        <h2>Workers</h2>
-                        <p className="subtext">5 ticks per second</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/lazy_worker.jpeg?height=80&width=80" alt="Lazy Worker"/>
-                        <h3>Lazy Worker</h3>
-                        <p>Increase ticks/second by 0.2</p>
-                        <p className="price">$100</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/basic_worker.jpeg?height=80&width=80" alt="Basic Worker"/>
-                        <h3>Basic Worker</h3>
-                        <p>Increase ticks/second by 1</p>
-                        <p className="price">$500</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/hard_worker.jpeg?height=80&width=80" alt="Hard Worker"/>
-                        <h3>Hard Worker</h3>
-                        <p>Increase ticks/second by 50</p>
-                        <p className="price">$100,000</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                    <div className="item-card">
-                        <img src="/assets/super_worker.jpeg?height=80&width=80" alt="Super Worker"/>
-                        <h3>Super Worker</h3>
-                        <p>Increase ticks/second by 1000</p>
-                        <p className="price">$350,000,000</p>
-                        <p className="owned">You have: 0</p>
-                    </div>
-                </div>
+                ))}
             </div>
         </main>
     );
