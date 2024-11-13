@@ -21,15 +21,15 @@ main.leaderboard-page {
 .leaderboard-item:hover {
     background-color: var(--color-yellow);
 }
-.leaderboard-item:nth-child(1) {
+.leaderboard-item.first-place {
     background-color: var(--color-gold);
     font-weight: bold;
 }
-.leaderboard-item:nth-child(2) {
+.leaderboard-item.second-place {
     background-color: var(--color-silver);
     font-weight: bold;
 }
-.leaderboard-item:nth-child(3) {
+.leaderboard-item.third-place {
     background-color: var(--color-bronze);
     font-weight: bold;
 }

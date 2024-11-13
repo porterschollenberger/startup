@@ -55,12 +55,20 @@ function Leaderboard() {
         currentPage * itemsPerPage
     );
 
+    const getPlaceClass = (index) => {
+        const overallRank = (currentPage - 1) * itemsPerPage + index + 1;
+        if (overallRank === 1) return 'first-place';
+        if (overallRank === 2) return 'second-place';
+        if (overallRank === 3) return 'third-place';
+        return '';
+    };
+
     return (
         <main className="leaderboard-page">
             <h1 className="leaderboard-title">Leaderboard</h1>
             <ol className="leaderboard">
                 {currentData.map((player, index) => (
-                    <li key={player.id} className="leaderboard-item">
+                    <li key={player.id} className={`leaderboard-item ${getPlaceClass(index)}`}>
                         <span className="rank">{(currentPage - 1) * itemsPerPage + index + 1}</span>
                         <span className="player-name">{player.name}</span>
                         <span className="player-money">{formatMoney(player.money)}</span>
