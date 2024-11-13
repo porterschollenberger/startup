@@ -1,8 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useLocation } from 'react-router-dom';
 import './Navigation.css';
 
 function Navigation() {
+    const location = useLocation();
+    const isLoggedIn = location.pathname !== '/';
+
     return (
         <nav>
             <i className="fa-solid fa-bars"></i>
@@ -12,8 +15,14 @@ function Navigation() {
                 <li><Link to="/achievements">Achievements</Link></li>
             </ul>
             <ul className="account-info">
-                <li><Link to="/">Logout</Link></li>
-                <li className="username">username</li>
+                {isLoggedIn ? (
+                    <>
+                        <li><Link to="/">Logout</Link></li>
+                        <li className="username">{'sampleuser145'}</li>
+                    </>
+                ) : (
+                    <li><Link to="/">Login/Register</Link></li>
+                )}
             </ul>
         </nav>
     );
