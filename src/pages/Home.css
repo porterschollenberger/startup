@@ -1,9 +1,8 @@
 main.home-page {
     max-width: 600px;
-}
-.form-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    height: 100vh;
 }
 .form-section {
     width: 45%;
@@ -15,9 +14,9 @@ form {
 label {
     margin-top: 1rem;
 }
-input[type="text"], input[type="password"], input[type="email"] {
-    padding: 0.5rem;
+input {
     margin-top: 0.5rem;
+    padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
@@ -33,6 +32,15 @@ input[type="submit"] {
 }
 input[type="submit"]:hover {
     background-color: var(--color-green);
+}
+.toggle-form {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    text-decoration: underline;
 }
 @media (max-width: 800px) {
     .form-container {
