@@ -41,3 +41,12 @@ Imagine turning the mundane task of cleaning into a thrilling business adventure
 - **Application elements:** Used a consistent style to make the page elements, cards, buttons, and text. 
 - **Application text content:** All the text in the app is consistent in font, style, and placement. It also resizes, moves, and disappears as needed.
 - **Application images:** The application has images for all the store items and one for each achievement. The store items are AI generated. I made sure to maintain a consistent size and made the images circular.
+## React Deliverable
+- **Bundling:** My Application is bundled and transpiled using Vite.
+- **Components:** I made components for my header, navbar, ticker, and footer. I also made components for the following pages:
+  - **Home:** The home page can now switch between the login and register screen. Upon form submission, the user is brought to the play page, although login has not been fully implemented.
+  - **Play:** The game itself is now playable! You can purchase items to earn more and more money. The game state is kept track of in the local storage so your progress is kept. Though the game is not balanced well, I am still very proud to have this functionality working!
+  - **Leaderboard:** The leaderboard is now filled with dummy data which updates every 30 seconds demonstrating the ability to update information. There is also now enough data to navigate to different leaderboard pages.
+  - **Achievements:** This page did not receive many react changes; it mostly got UI adjustments along with the ability to search. I also added a progress bar to show progress to total completion.
+- **Router:** The site has been converted to a single page application implementing React Routes to show the main content for each page discussed earlier.
+- **Hooks:** I made excellent use of the useState, useEffect, and useCallback hooks to add dynamic updating information to my site.
