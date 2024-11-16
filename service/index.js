@@ -9,7 +9,6 @@ app.use(express.static('public'));
 // temp data stores
 let users = {};
 let gameData = {};
-let leaderboard = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
@@ -54,7 +53,14 @@ apiRouter.delete('/auth/logout', (req, res) => {
 
 // get leaderboard
 apiRouter.get('/leaderboard', (req, res) => {
-    res.send(leaderboard);
+    const leaderboardData = Object.entries(gameData).map(([username, data]) => ({
+        username: username,
+        money: data.money
+    }));
+
+    leaderboardData.sort((a, b) => b.money - a.money);
+
+    res.json(leaderboardData);
 });
 
 // get single user game data

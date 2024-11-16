@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './Leaderboard.css';
 
-const generateMockData = (count) => {
-    const names = ['Jason', 'Mark', 'Hunter', 'Emma', 'Olivia', 'Liam', 'Sophia', 'Noah', 'Ava', 'Ethan',
-        'Charlotte', 'William', 'Amelia', 'James', 'Mia', 'Benjamin', 'Harper', 'Lucas', 'Evelyn', 'Mason'];
-    const surnames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
-        'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
-
-    return Array.from({ length: count }, (_, i) => ({
-        id: i + 1,
-        name: `${names[Math.floor(Math.random() * names.length)]} ${surnames[Math.floor(Math.random() * surnames.length)]}`,
-        money: Math.floor(Math.random() * 10000) + 1000
-    })).sort((a, b) => b.money - a.money);
+const fetchLeaderboardData = async () => {
+    try {
+        const response = await fetch('/api/leaderboard');
+        if (!response.ok) {
+            throw new Error('Failed to fetch leaderboard data');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+        return [];
+    }
 };
 
 function Leaderboard() {
@@ -20,19 +20,17 @@ function Leaderboard() {
     const itemsPerPage = 10;
 
     useEffect(() => {
-        const mockData = generateMockData(100);
-        setLeaderboardData(mockData);
+        const loadLeaderboardData = async () => {
+            const data = await fetchLeaderboardData();
+            setLeaderboardData(data);
+        };
+        loadLeaderboardData();
     }, []);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setLeaderboardData(prevData => {
-                const updatedData = prevData.map(player => ({
-                    ...player,
-                    money: player.money + Math.floor(Math.random() * 100000)
-                }));
-                return updatedData.sort((a, b) => b.money - a.money);
-            });
+        const interval = setInterval(async () => {
+            const updatedData = await fetchLeaderboardData();
+            setLeaderboardData(updatedData);
         }, 30000);
 
         return () => clearInterval(interval);
@@ -68,9 +66,9 @@ function Leaderboard() {
             <h1 className="leaderboard-title">Leaderboard</h1>
             <ol className="leaderboard">
                 {currentData.map((player, index) => (
-                    <li key={player.id} className={`leaderboard-item ${getPlaceClass(index)}`}>
+                    <li key={player.username} className={`leaderboard-item ${getPlaceClass(index)}`}>
                         <span className="rank">{(currentPage - 1) * itemsPerPage + index + 1}</span>
-                        <span className="player-name">{player.name}</span>
+                        <span className="player-name">{player.username}</span>
                         <span className="player-money">{formatMoney(player.money)}</span>
                     </li>
                 ))}
