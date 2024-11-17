@@ -50,3 +50,9 @@ Imagine turning the mundane task of cleaning into a thrilling business adventure
   - **Achievements:** This page did not receive many react changes; it mostly got UI adjustments along with the ability to search. I also added a progress bar to show progress to total completion.
 - **Router:** The site has been converted to a single page application implementing React Routes to show the main content for each page discussed earlier.
 - **Hooks:** I made excellent use of the useState, useEffect, and useCallback hooks to add dynamic updating information to my site.
+## Service Deliverable
+- **Node.js/Express:** My app now has a backend service implemented using Node.js and Express!
+- **Static middleware:** My front end is served up to the client using a static middleware.
+- **Third party endpoints:** The ticker at the bottom of the screen now shows facts obtained by calling a third party endpoint for random fun facts!
+- **Backend service endpoints:** I implemented backend endpoints for register, login, logout, leaderboard, and saving game data. This allows for data to be saved on the backend server, soon to be moved to a database.
+- **Frontend calls service endpoints:** The application front end properly calls the backend endpoints to make use of the game saving, leaderboard generation, and authentication.
