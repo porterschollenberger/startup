@@ -21,20 +21,63 @@ function Home() {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (isLogin) {
-            console.log('Login submitted', formData);
-            navigate('/play');
-            // Handle login logic here
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: formData.email,
+                        password: formData.password,
+                    }),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', data.username);
+                    navigate('/play');
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.msg || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login');
+            }
         } else {
             if (formData.password !== formData.confirmPassword) {
                 alert("Passwords don't match!");
                 return;
             }
-            console.log('Registration submitted', formData);
-            navigate('/play');
-            // Handle registration logic here
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: formData.username,
+                        email: formData.email,
+                        password: formData.password,
+                    }),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', formData.username);
+                    navigate('/play');
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.msg || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('An error occurred during registration');
+            }
         }
     };
 

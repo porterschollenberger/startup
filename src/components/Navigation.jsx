@@ -1,10 +1,32 @@
 import React from 'react';
-import {Link, useLocation } from 'react-router-dom';
+import {Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navigation.css';
 
 function Navigation() {
+    const navigate = useNavigate();
+
     const location = useLocation();
     const isLoggedIn = location.pathname !== '/';
+
+    const handleLogout = async () => {
+        const response = await fetch('api/auth/logout', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                token: localStorage.getItem('token'),
+            }),
+        });
+        if (response.ok) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            navigate('/');
+        } else {
+            const errorData = await response.json();
+            alert(errorData.msg || 'Logout failed');
+        }
+    }
 
     return (
         <nav>
@@ -17,8 +39,8 @@ function Navigation() {
             <ul className="account-info">
                 {isLoggedIn ? (
                     <>
-                        <li><Link to="/">Logout</Link></li>
-                        <li className="username">{'sampleuser145'}</li>
+                        <li><button onClick={handleLogout}>Logout</button></li>
+                        <li className="username">{localStorage.getItem('username')}</li>
                     </>
                 ) : (
                     <li><Link to="/">Login/Register</Link></li>

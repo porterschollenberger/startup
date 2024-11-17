@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const uuid = require("uuid");
 const apiRouter = express.Router();
-app.use('/api', apiRouter);
 app.use(express.json());
+app.use('/api', apiRouter);
 app.use(express.static('public'));
 
 // temp data stores
@@ -35,7 +35,7 @@ apiRouter.post('/auth/login', (req, res) => {
     if (user) {
         if (req.body.password === user.password) {
             user.token = uuid.v4();
-            res.send({ token: user.token });
+            res.send({ token: user.token, username: user.username });
             return;
         }
     }
@@ -47,8 +47,10 @@ apiRouter.delete('/auth/logout', (req, res) => {
     const user = Object.values(users).find(u => u.token === req.body.token);
     if (user) {
         delete user.token;
+        res.status(200).end();
+    } else {
+        res.status(404).send({ msg: "No token found" });
     }
-    res.status(204).end();
 });
 
 // get leaderboard
