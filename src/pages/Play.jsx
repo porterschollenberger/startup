@@ -36,13 +36,10 @@ function Play() {
 
     const loadGameState = async (username) => {
         try {
-            console.log(`About to call /api/game/${username}`);
             const response = await fetch(`/api/game/${username}`);
             if (response.status === 200) {
-                console.log("Found game, returning game");
                 return await response.json();
             } else if (response.status === 201) {
-                console.log("Found nothing, returning default");
                 return {
                     money: money,
                     moneyPerTick: moneyPerTick,
@@ -142,7 +139,6 @@ function Play() {
         }
         console.log("Saving game to server");
         const currentGameState = gameStateRef.current;
-        console.log("Current game state:", currentGameState);
         fetch('/api/game', {
             method: 'POST',
             headers: {
