@@ -69,9 +69,9 @@ apiRouter.get('/leaderboard', (req, res) => {
 apiRouter.get('/game/:username', (req, res) => {
     const game = gameData[req.params.username];
     if (game) {
-        res.send(game);
+        res.status(200).send(game);
     } else {
-        res.status(204).end();
+        res.status(201).end();
     }
 });
 

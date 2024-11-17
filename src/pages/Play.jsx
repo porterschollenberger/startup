@@ -1,57 +1,84 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Play.css';
 
 function Play() {
-    const loadGameState = () => {
-        const savedState = localStorage.getItem('gameState');
-        if (savedState) {
-            return JSON.parse(savedState);
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+    const [money, setMoney] = useState(1);
+    const [moneyPerTick, setMoneyPerTick] = useState(0);
+    const [moneyMultiplier, setMoneyMultiplier] = useState(1);
+    const [ticksPerSecond, setTicksPerSecond] = useState(1);
+    const [isGameLoaded, setIsGameLoaded] = useState(false);
+    const [items, setItems] = useState({
+        rags: [
+            {name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30},
+            {name: "Basic Rag", basePrice: 15, owned: 0, moneyPerTick: 1},
+            {name: "High Quality Rag", basePrice: 50, owned: 0, moneyPerTick: 5},
+            {name: "Super Rag", basePrice: 5000, owned: 0, moneyPerTick: 100},
+        ],
+        soaps: [
+            {name: "Watery Soap", basePrice: 5, owned: 0, multiplierIncrease: 0.001},
+            {name: "Basic Soap", basePrice: 50, owned: 0, multiplierIncrease: 0.01},
+            {name: "High Quality Soap", basePrice: 115, owned: 0, multiplierIncrease: 0.05},
+            {name: "Super Soap", basePrice: 250000, owned: 0, multiplierIncrease: 1},
+        ],
+        workers: [
+            {name: "Lazy Worker", basePrice: 100, owned: 0, tickIncrease: 0.2},
+            {name: "Basic Worker", basePrice: 500, owned: 0, tickIncrease: 1},
+            {name: "Hard Worker", basePrice: 100000, owned: 0, tickIncrease: 50},
+            {name: "Super Worker", basePrice: 350000000, owned: 0, tickIncrease: 1000},
+        ],
+    });
+    const [animatingItems, setAnimatingItems] = useState({});
+
+    const gameStateRef = useRef({});
+
+    const loadGameState = async (username) => {
+        try {
+            console.log(`About to call /api/game/${username}`);
+            const response = await fetch(`/api/game/${username}`);
+            if (response.status === 200) {
+                console.log("Found game, returning game");
+                return await response.json();
+            } else if (response.status === 201) {
+                console.log("Found nothing, returning default");
+                return {
+                    money: money,
+                    moneyPerTick: moneyPerTick,
+                    moneyMultiplier: moneyMultiplier,
+                    ticksPerSecond: ticksPerSecond,
+                    items: items,
+                };
+            } else if (response.status === 401) {
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Failed to load game state:', error);
         }
         return null;
-    }
+    };
 
-    const [money, setMoney] = useState(() => {
-        const savedState = loadGameState();
-        return savedState ? savedState.money : 1;
-    });
-    const [moneyPerTick, setMoneyPerTick] = useState(() => {
-        const savedState = loadGameState();
-        return savedState ? savedState.moneyPerTick : 0;
-    });
-    const [moneyMultiplier, setMoneyMultiplier] = useState(() => {
-        const savedState = loadGameState();
-        return savedState ? savedState.moneyMultiplier : 1;
-    });
-    const [ticksPerSecond, setTicksPerSecond] = useState(() => {
-        const savedState = loadGameState();
-        return savedState ? savedState.ticksPerSecond : 1;
-    });
-
-    const [items, setItems] = useState(() => {
-        const savedState = loadGameState();
-        return savedState ? savedState.items : {
-            rags: [
-                {name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30},
-                {name: "Basic Rag", basePrice: 15, owned: 0, moneyPerTick: 1},
-                {name: "High Quality Rag", basePrice: 50, owned: 0, moneyPerTick: 5},
-                {name: "Super Rag", basePrice: 5000, owned: 0, moneyPerTick: 100},
-            ],
-            soaps: [
-                {name: "Watery Soap", basePrice: 5, owned: 0, multiplierIncrease: 0.001},
-                {name: "Basic Soap", basePrice: 50, owned: 0, multiplierIncrease: 0.01},
-                {name: "High Quality Soap", basePrice: 115, owned: 0, multiplierIncrease: 0.05},
-                {name: "Super Soap", basePrice: 250000, owned: 0, multiplierIncrease: 1},
-            ],
-            workers: [
-                {name: "Lazy Worker", basePrice: 100, owned: 0, tickIncrease: 0.2},
-                {name: "Basic Worker", basePrice: 500, owned: 0, tickIncrease: 1},
-                {name: "Hard Worker", basePrice: 100000, owned: 0, tickIncrease: 50},
-                {name: "Super Worker", basePrice: 350000000, owned: 0, tickIncrease: 1000},
-            ],
-        }
-    });
-
-    const [animatingItems, setAnimatingItems] = useState({});
+    useEffect(() => {
+        const fetchGameState = async () => {
+            const storedUsername = localStorage.getItem('username');
+            if (storedUsername) {
+                setUsername(storedUsername);
+                const savedState = await loadGameState(storedUsername);
+                if (savedState) {
+                    setMoney(savedState.money);
+                    setMoneyPerTick(savedState.moneyPerTick);
+                    setMoneyMultiplier(savedState.moneyMultiplier);
+                    setTicksPerSecond(savedState.ticksPerSecond);
+                    setItems(savedState.items);
+                }
+                setIsGameLoaded(true);
+            } else {
+                navigate('/');
+            }
+        };
+        fetchGameState();
+    }, [navigate]);
 
     const updateMoney = useCallback(() => {
         setMoney(prevMoney => prevMoney + moneyPerTick * moneyMultiplier);
@@ -65,7 +92,6 @@ function Play() {
     const buyItem = (category, index) => {
         const item = items[category][index];
         const price = Math.floor(item.basePrice * Math.pow(1.15, item.owned));
-
         if (money >= price) {
             setMoney(prevMoney => prevMoney - price);
             setItems(prevItems => {
@@ -76,7 +102,6 @@ function Play() {
                 };
                 return newItems;
             });
-
             if (category === 'rags') {
                 setMoneyPerTick(prevMoney => prevMoney + item.moneyPerTick);
             } else if (category === 'soaps') {
@@ -84,7 +109,6 @@ function Play() {
             } else if (category === 'workers') {
                 setTicksPerSecond(prevTicks => prevTicks + item.tickIncrease);
             }
-
             setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: 'success' }));
             setTimeout(() => {
                 setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: null }));
@@ -101,14 +125,64 @@ function Play() {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
     };
 
-    const saveGameState = () => {
-      const gameState = { money, moneyPerTick, moneyMultiplier, ticksPerSecond, items };
-      localStorage.setItem('gameState', JSON.stringify(gameState));
-    };
+    useEffect(() => {
+        gameStateRef.current = {
+            money,
+            moneyPerTick,
+            moneyMultiplier,
+            ticksPerSecond,
+            items,
+        };
+    }, [money, moneyPerTick, moneyMultiplier, ticksPerSecond, items]);
+
+    const saveGameState = useCallback(() => {
+        if (!isGameLoaded) {
+            console.log("Game not yet loaded, skipping save");
+            return;
+        }
+        console.log("Saving game to server");
+        const currentGameState = gameStateRef.current;
+        console.log("Current game state:", currentGameState);
+        fetch('/api/game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, gameState: currentGameState }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to save game state');
+                }
+                console.log("Game state saved successfully");
+            })
+            .catch(error => {
+                console.error('Error saving game state:', error);
+            });
+    }, [isGameLoaded, username]);
 
     useEffect(() => {
-        saveGameState();
-    }, [money, moneyPerTick, moneyMultiplier, ticksPerSecond, items]);
+        if (isGameLoaded) {
+            const saveInterval = setInterval(saveGameState, 60000); // Save every minute
+            return () => {
+                clearInterval(saveInterval);
+                saveGameState(); // Save on component unmount
+            };
+        }
+    }, [isGameLoaded, saveGameState]);
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (isGameLoaded) {
+                saveGameState();
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [isGameLoaded, saveGameState]);
 
     return (
         <main className="play-page">
