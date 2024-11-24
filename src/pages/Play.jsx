@@ -35,7 +35,7 @@ function Play() {
     const loadGameState = async (username) => {
         try {
             const response = await fetch(`/api/game/${username}`);
-            if (response.ok) {
+            if (response.status === 200) {
                 return await response.json();
             }
             if (response.status === 201) {
