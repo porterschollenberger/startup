@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import './Home.css';
@@ -14,6 +14,21 @@ function Home() {
 
     const { setAuth } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAuthentication = async () => {
+            try {
+                const response = await fetch('/api/check', { credentials: 'include' });
+                const data = await response.json();
+                if (data.authenticated) {
+                    navigate('/play');
+                }
+            } catch (error) {
+                console.error('Error checking authentication:', error);
+            }
+        };
+        checkAuthentication();
+    }, [navigate]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
