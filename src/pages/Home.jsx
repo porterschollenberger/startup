@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 import './Home.css';
 
 function Home() {
@@ -11,6 +12,9 @@ function Home() {
         confirmPassword: ''
     });
 
+    const { setAuth } = useAuth();
+    const navigate = useNavigate();
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevData => ({
@@ -18,8 +22,6 @@ function Home() {
             [name]: value
         }));
     };
-
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,11 +36,11 @@ function Home() {
                         email: formData.email,
                         password: formData.password,
                     }),
+                    credentials: 'include'
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('username', data.username);
+                    setAuth({ isLoggedIn: true, username: data.username });
                     navigate('/play');
                 } else {
                     const errorData = await response.json();
@@ -64,11 +66,11 @@ function Home() {
                         email: formData.email,
                         password: formData.password,
                     }),
+                    credentials: 'include'
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('username', formData.username);
+                    setAuth({ isLoggedIn: true, username: data.username });
                     navigate('/play');
                 } else {
                     const errorData = await response.json();
