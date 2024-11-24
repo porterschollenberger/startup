@@ -36,7 +36,7 @@ apiRouter.post('/auth/register', async (req, res) => {
     } else {
         const user = await DB.createUser(req.body.email, req.body.username, req.body.password);
         setAuthCookie(res, user.token);
-        res.send({ token: user.token });
+        res.send({ token: user.token, username: user.username });
     }
 });
 
@@ -103,7 +103,7 @@ secureApiRouter.get('/game/:username', async (req, res) => {
     if (game) {
         res.status(200).send(game);
     } else {
-        res.status(404).send({ msg: 'Game not found' });
+        res.status(201).send({ msg: 'Game not found' });
     }
 });
 
