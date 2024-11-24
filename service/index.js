@@ -19,6 +19,16 @@ const authCookieName = 'token';
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
+apiRouter.get('/check', async (req, res) => {
+    const authToken = req.cookies[authCookieName];
+    const user = await DB.getUserByToken(authToken);
+    if (user) {
+        res.status(200).json({ authenticated: true, username: user.username });
+    } else {
+        res.status(401).json({ authenticated: false });
+    }
+});
+
 // User registration
 apiRouter.post('/auth/register', async (req, res) => {
     if (await DB.getUser(req.body.email)) {
@@ -60,13 +70,31 @@ const secureApiRouter = express.Router();
 apiRouter.use(secureApiRouter);
 
 secureApiRouter.use(async (req, res, next) => {
-    const authToken = req.cookies[authCookieName];
-    const user = await DB.getUserByToken(authToken);
-    if (user) {
-        next();
+    if (req.path.startsWith('/api/')) {
+        // For API requests
+        const authToken = req.cookies[authCookieName];
+        const user = await DB.getUserByToken(authToken);
+        if (user) {
+            next();
+        } else {
+            res.status(401).send({ msg: 'Unauthorized' });
+        }
     } else {
-        res.status(401).send({ msg: 'Unauthorized' });
+        // For page requests
+        const authToken = req.cookies[authCookieName];
+        const user = await DB.getUserByToken(authToken);
+        if (user) {
+            next();
+        } else {
+            res.redirect('/');
+        }
     }
+});
+
+// Get leaderboard
+secureApiRouter.get('/leaderboard', async (req, res) => {
+    const leaderboardData = await DB.getLeaderboard();
+    res.json(leaderboardData);
 });
 
 // Get single user game data
