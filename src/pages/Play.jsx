@@ -58,19 +58,31 @@ function Play() {
 
     useEffect(() => {
         const fetchGameState = async () => {
-            const storedUsername = localStorage.getItem('username');
-            if (storedUsername) {
-                setUsername(storedUsername);
-                const savedState = await loadGameState(storedUsername);
-                if (savedState) {
-                    setMoney(savedState.money);
-                    setMoneyPerTick(savedState.moneyPerTick);
-                    setMoneyMultiplier(savedState.moneyMultiplier);
-                    setTicksPerSecond(savedState.ticksPerSecond);
-                    setItems(savedState.items);
+            try {
+                const response = await fetch('/api/check', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authenticated) {
+                        setUsername(data.username);
+                        const savedState = await loadGameState(data.username);
+                        if (savedState) {
+                            setMoney(savedState.money);
+                            setMoneyPerTick(savedState.moneyPerTick);
+                            setMoneyMultiplier(savedState.moneyMultiplier);
+                            setTicksPerSecond(savedState.ticksPerSecond);
+                            setItems(savedState.items);
+                        }
+                        setIsGameLoaded(true);
+                    } else {
+                        navigate('/');
+                    }
+                } else {
+                    navigate('/');
                 }
-                setIsGameLoaded(true);
-            } else {
+            } catch (error) {
+                console.error('Error checking authentication:', error);
                 navigate('/');
             }
         };
