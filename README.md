@@ -56,3 +56,10 @@ Imagine turning the mundane task of cleaning into a thrilling business adventure
 - **Third party endpoints:** The ticker at the bottom of the screen now shows facts obtained by calling a third party endpoint for random fun facts!
 - **Backend service endpoints:** I implemented backend endpoints for register, login, logout, leaderboard, and saving game data. This allows for data to be saved on the backend server, soon to be moved to a database.
 - **Frontend calls service endpoints:** The application front end properly calls the backend endpoints to make use of the game saving, leaderboard generation, and authentication.
+## DB/Login Deliverable
+- **Database:** I created a persistent storage database using MongoDB Atlas!
+- **Stores Data:** My application stores users and game information in the database.
+- **Registration:** Users can register for a new account and start playing the game.
+- **Login:** Existing users can use the login feature to restore their progress and continue playing. They may also log out when they are done and their data is saved properly.
+- **Credentials:** User credentials and game information are encrypted and stored in the database. Information is received from the database while using the application for proper functionality.
+- **Restricts Functionality:** Users cannot access the game, leaderboard, or achievements if they are not logged in. If they are logged in, they cannot attempt to log in again.
