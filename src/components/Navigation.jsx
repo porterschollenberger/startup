@@ -7,7 +7,7 @@ import './Navigation.css';
 function Navigation() {
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
-    const { saveGameState } = useGame();
+    const { saveGameState, setGameState, setUsername, setIsGameLoaded } = useGame();
 
     useEffect(() => {
         const checkAuthStatus = async () => {
@@ -37,6 +37,9 @@ function Navigation() {
             });
             if (response.ok) {
                 setAuth({ isLoggedIn: false, username: '' });
+                setGameState({});
+                setUsername('');
+                setIsGameLoaded(false);
                 navigate('/');
             } else {
                 const errorData = await response.json();
