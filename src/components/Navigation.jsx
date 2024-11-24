@@ -1,36 +1,39 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useGame } from '../GameContext';
 import './Navigation.css';
 
 function Navigation() {
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
+    const { saveGameState } = useGame();
 
     useEffect(() => {
-        checkAuthStatus();
-    }, []);
-
-    const checkAuthStatus = async () => {
-        try {
-            const response = await fetch('/api/check', { credentials: 'include' });
-            if (response.ok) {
-                const data = await response.json();
-                setAuth({ isLoggedIn: data.authenticated, username: data.username });
-            } else {
+        const checkAuthStatus = async () => {
+            try {
+                const response = await fetch('/api/check', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    setAuth({ isLoggedIn: data.authenticated, username: data.username });
+                } else {
+                    setAuth({ isLoggedIn: false, username: '' });
+                }
+            } catch (error) {
+                console.error('Error checking authentication:', error);
                 setAuth({ isLoggedIn: false, username: '' });
             }
-        } catch (error) {
-            console.error('Error checking authentication:', error);
-            setAuth({ isLoggedIn: false, username: '' });
-        }
-    };
+        };
+        checkAuthStatus();
+    }, [setAuth]);
 
     const handleLogout = async () => {
         try {
+            await saveGameState();
+
             const response = await fetch('/api/auth/logout', {
                 method: 'DELETE',
-                credentials: 'include'
+                credentials: 'include',
             });
             if (response.ok) {
                 setAuth({ isLoggedIn: false, username: '' });
@@ -46,24 +49,24 @@ function Navigation() {
     };
 
     return (
-      <nav>
-          <i className="fa-solid fa-bars"></i>
-          <ul className="nav-list">
-              <li><Link to="/play">Play</Link></li>
-              <li><Link to="/leaderboard">Leaderboard</Link></li>
-              <li><Link to="/achievements">Achievements</Link></li>
-          </ul>
-          <ul className="account-info">
-              {auth.isLoggedIn ? (
-                <>
-                    <li><button onClick={handleLogout}>Logout</button></li>
-                    <li className="username">{auth.username}</li>
-                </>
-              ) : (
-                <li><Link to="/">Login/Register</Link></li>
-              )}
-          </ul>
-      </nav>
+        <nav>
+            <i className="fa-solid fa-bars"></i>
+            <ul className="nav-list">
+                <li><Link to="/play">Play</Link></li>
+                <li><Link to="/leaderboard">Leaderboard</Link></li>
+                <li><Link to="/achievements">Achievements</Link></li>
+            </ul>
+            <ul className="account-info">
+                {auth.isLoggedIn ? (
+                    <>
+                        <li><button onClick={handleLogout}>Logout</button></li>
+                        <li className="username">{auth.username}</li>
+                    </>
+                ) : (
+                    <li><Link to="/">Login/Register</Link></li>
+                )}
+            </ul>
+        </nav>
     );
 }
 

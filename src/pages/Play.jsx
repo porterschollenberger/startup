@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGame } from '../GameContext';
 import './Play.css';
 
 function Play() {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const { isGameLoaded, setIsGameLoaded, saveGameState, setUsername, setGameState } = useGame();
     const [money, setMoney] = useState(1);
     const [moneyPerTick, setMoneyPerTick] = useState(0);
     const [moneyMultiplier, setMoneyMultiplier] = useState(1);
     const [ticksPerSecond, setTicksPerSecond] = useState(1);
-    const [isGameLoaded, setIsGameLoaded] = useState(false);
     const [items, setItems] = useState({
         rags: [
             {name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30},
@@ -32,23 +32,20 @@ function Play() {
     });
     const [animatingItems, setAnimatingItems] = useState({});
 
-    const gameStateRef = useRef({});
-
     const loadGameState = async (username) => {
         try {
             const response = await fetch(`/api/game/${username}`);
-            if (response.status === 200) {
+            if (response.ok) {
                 return await response.json();
-            } else if (response.status === 201) {
+            }
+            if (response.status === 201) {
                 return {
-                    money: money,
-                    moneyPerTick: moneyPerTick,
-                    moneyMultiplier: moneyMultiplier,
-                    ticksPerSecond: ticksPerSecond,
-                    items: items,
+                    money,
+                    moneyPerTick,
+                    moneyMultiplier,
+                    ticksPerSecond,
+                    items,
                 };
-            } else if (response.status === 401) {
-                navigate('/');
             }
         } catch (error) {
             console.error('Failed to load game state:', error);
@@ -59,9 +56,7 @@ function Play() {
     useEffect(() => {
         const fetchGameState = async () => {
             try {
-                const response = await fetch('/api/check', {
-                    credentials: 'include'
-                });
+                const response = await fetch('/api/check', { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
                     if (data.authenticated) {
@@ -87,7 +82,7 @@ function Play() {
             }
         };
         fetchGameState();
-    }, [navigate]);
+    }, [navigate, setIsGameLoaded]);
 
     const updateMoney = useCallback(() => {
         setMoney(prevMoney => prevMoney + moneyPerTick * moneyMultiplier);
@@ -104,7 +99,7 @@ function Play() {
         if (money >= price) {
             setMoney(prevMoney => prevMoney - price);
             setItems(prevItems => {
-                const newItems = {...prevItems};
+                const newItems = { ...prevItems };
                 newItems[category][index] = {
                     ...item,
                     owned: item.owned + 1,
@@ -112,22 +107,23 @@ function Play() {
                 return newItems;
             });
             if (category === 'rags') {
-                setMoneyPerTick(prevMoney => prevMoney + item.moneyPerTick);
+                setMoneyPerTick(prev => prev + item.moneyPerTick);
             } else if (category === 'soaps') {
-                setMoneyMultiplier(prevMultiplier => prevMultiplier + item.multiplierIncrease);
+                setMoneyMultiplier(prev => prev + item.multiplierIncrease);
             } else if (category === 'workers') {
-                setTicksPerSecond(prevTicks => prevTicks + item.tickIncrease);
+                setTicksPerSecond(prev => prev + item.tickIncrease);
             }
-            setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: 'success' }));
-            setTimeout(() => {
-                setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: null }));
-            }, 500);
+            animatePurchase(category, index, 'success');
         } else {
-            setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: 'fail' }));
-            setTimeout(() => {
-                setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: null }));
-            }, 500);
+            animatePurchase(category, index, 'fail');
         }
+    };
+
+    const animatePurchase = (category, index, result) => {
+        setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: result }));
+        setTimeout(() => {
+            setAnimatingItems(prev => ({ ...prev, [`${category}-${index}`]: null }));
+        }, 500);
     };
 
     const formatMoney = (amount) => {
@@ -135,46 +131,21 @@ function Play() {
     };
 
     useEffect(() => {
-        gameStateRef.current = {
+        setGameState({
             money,
             moneyPerTick,
             moneyMultiplier,
             ticksPerSecond,
             items,
-        };
+        });
     }, [money, moneyPerTick, moneyMultiplier, ticksPerSecond, items]);
-
-    const saveGameState = useCallback(() => {
-        if (!isGameLoaded) {
-            console.log("Game not yet loaded, skipping save");
-            return;
-        }
-        console.log("Saving game to server");
-        const currentGameState = gameStateRef.current;
-        fetch('/api/game', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, gameState: currentGameState }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to save game state');
-                }
-                console.log("Game state saved successfully");
-            })
-            .catch(error => {
-                console.error('Error saving game state:', error);
-            });
-    }, [isGameLoaded, username]);
 
     useEffect(() => {
         if (isGameLoaded) {
-            const saveInterval = setInterval(saveGameState, 60000); // Save every minute
+            const saveInterval = setInterval(saveGameState, 60000);
             return () => {
                 clearInterval(saveInterval);
-                saveGameState(); // Save on component unmount
+                saveGameState();
             };
         }
     }, [isGameLoaded, saveGameState]);
@@ -185,11 +156,8 @@ function Play() {
                 saveGameState();
             }
         };
-
         window.addEventListener('beforeunload', handleBeforeUnload);
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, [isGameLoaded, saveGameState]);
 
     return (
@@ -202,8 +170,8 @@ function Play() {
                             <h2>{category.charAt(0).toUpperCase() + category.slice(1)}</h2>
                             <p className="subtext">
                                 {category === 'rags' && `${formatMoney(moneyPerTick)} per tick`}
-                                {category === 'soaps' && `${moneyMultiplier.toFixed(2)}x money multiplier`}
-                                {category === 'workers' && `${ticksPerSecond.toFixed(1)} ticks per second`}
+                                {category === 'soaps' && `${moneyMultiplier.toFixed(2)}x multiplier`}
+                                {category === 'workers' && `${ticksPerSecond.toFixed(1)} ticks/sec`}
                             </p>
                         </div>
                         {categoryItems.map((item, index) => (
@@ -215,15 +183,19 @@ function Play() {
                                 }`}
                                 onClick={() => buyItem(category, index)}
                             >
-                                <img src={`/${item.name.toLowerCase().replace(/ /g, '_')}.jpeg?height=80&width=80`} alt={item.name} draggable="false"/>
+                                <img
+                                    src={`/${item.name.toLowerCase().replace(/ /g, '_')}.jpeg?height=80&width=80`}
+                                    alt={item.name}
+                                    draggable="false"
+                                />
                                 <h3>{item.name}</h3>
                                 <p>
-                                    {category === 'rags' && `Earn ${formatMoney(item.moneyPerTick)} every tick`}
-                                    {category === 'soaps' && `Increase earning multiplier by ${(item.multiplierIncrease * 100).toFixed(1)}%`}
-                                    {category === 'workers' && `Increase ticks/second by ${item.tickIncrease}`}
+                                    {category === 'rags' && `Earn ${formatMoney(item.moneyPerTick)} per tick`}
+                                    {category === 'soaps' && `Boost multiplier by ${(item.multiplierIncrease * 100).toFixed(1)}%`}
+                                    {category === 'workers' && `Boost ticks/sec by ${item.tickIncrease}`}
                                 </p>
                                 <p className="price">{formatMoney(Math.floor(item.basePrice * Math.pow(1.15, item.owned)))}</p>
-                                <p className="owned">You have: {item.owned}</p>
+                                <p className="owned">You own: {item.owned}</p>
                             </div>
                         ))}
                     </div>
