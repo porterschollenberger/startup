@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../GameContext';
 import './Play.css';
+import {GameEvent, GameNotifier} from "../components/gameNotifier";
 
 function Play() {
     const navigate = useNavigate();
@@ -34,13 +35,32 @@ function Play() {
     const [animatingItems, setAnimatingItems] = useState({});
     const [rocksOwned, setRocksOwned] = useState(0);
     const [rockPrice, setRockPrice] = useState(10);
+    const [notifications, setNotifications] = useState([]);
 
-    const buyRock = () => {
+    const buyRock = async () => {
         if (money >= rockPrice) {
             setMoney(prevMoney => prevMoney - rockPrice);
             setRocksOwned(prev => prev + 1);
             resetGame();
             setRockPrice(prevPrice => prevPrice * 10);
+
+            let username = ""
+            const response = await fetch('/api/check', { credentials: 'include' });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.authenticated) {
+                    username = data.username;
+                }
+                else {
+                    navigate('/');
+                }
+            } else {
+                navigate('/');
+            }
+
+            GameNotifier.broadcastEvent(username, GameEvent.Rock, {
+                message: `${username} purchased a Prestigious Rock!`,
+            });
         }
     };
 
@@ -51,6 +71,24 @@ function Play() {
         setTicksPerSecond(1);
         setItems(startingItems);
     };
+
+    React.useEffect(() => {
+        GameNotifier.addHandler(handleNotification);
+
+        return () => {
+            GameNotifier.removeHandler(handleNotification);
+        };
+    });
+
+    function handleNotification(notification) {
+        setNotifications([...notifications, notification]);
+
+        setTimeout(() => {
+            setNotifications(prevNotifications =>
+                prevNotifications.filter(n => n !== notification)
+            );
+        }, 10000);
+    }
 
     const loadGameState = async (username) => {
         try {
@@ -182,6 +220,22 @@ function Play() {
 
     return (
         <main className="play-page">
+            {/*<button*/}
+            {/*    onClick={() => {*/}
+            {/*        GameNotifier.broadcastEvent('TestUser', GameEvent.Rock, {*/}
+            {/*            message: 'TestUser purchased a Prestigious Rock!',*/}
+            {/*        });*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    Send Test Event*/}
+            {/*</button>*/}
+            <div className="notifications" style={{display: notifications.length > 0 ? 'block' : 'none'}}>
+                {notifications.map((notification, index) => (
+                    <div key={index} className="notification">
+                        {notification.value.message}
+                    </div>
+                ))}
+            </div>
             <div className="money-display">{formatMoney(money)}</div>
             <div className="items-container">
                 {Object.entries(items).map(([category, categoryItems]) => (
