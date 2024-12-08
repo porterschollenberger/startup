@@ -62,7 +62,7 @@ function Navigation() {
             <ul className={`nav-list ${isMenuOpen ? 'active' : ''}`}>
                 <li><Link to="/play">Play</Link></li>
                 <li><Link to="/leaderboard">Leaderboard</Link></li>
-                <li><Link to="/achievements">Achievements</Link></li>
+                {/*<li><Link to="/achievements">Achievements</Link></li>*/}
             </ul>
             <ul className="account-info">
                 {auth.isLoggedIn ? (
