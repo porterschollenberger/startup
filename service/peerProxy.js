@@ -4,6 +4,7 @@ const uuid = require('uuid');
 function peerProxy(httpServer) {
   // Create a websocket object
   const wss = new WebSocketServer({ noServer: true });
+  // console.log("WebSocket server is set up and listening for upgrades.");
 
   // Handle the protocol upgrade from HTTP to WebSocket
   httpServer.on('upgrade', (request, socket, head) => {
@@ -16,11 +17,13 @@ function peerProxy(httpServer) {
   let connections = [];
 
   wss.on('connection', (ws) => {
+    // console.log("New WebSocket connection established.");
     const connection = { id: uuid.v4(), alive: true, ws: ws };
     connections.push(connection);
 
     // Forward messages to everyone except the sender
     ws.on('message', function message(data) {
+      // console.log(`Received message: ${data}`);
       connections.forEach((c) => {
         if (c.id !== connection.id) {
           c.ws.send(data);
@@ -30,6 +33,7 @@ function peerProxy(httpServer) {
 
     // Remove the closed connection so we don't try to forward anymore
     ws.on('close', () => {
+      // console.log(`WebSocket connection ${connection.id} closed.`);
       const pos = connections.findIndex((o, i) => o.id === connection.id);
 
       if (pos >= 0) {
@@ -48,8 +52,10 @@ function peerProxy(httpServer) {
     connections.forEach((c) => {
       // Kill any connection that didn't respond to the ping last time
       if (!c.alive) {
+        // console.log(`Terminating inactive WebSocket connection ${c.id}.`);
         c.ws.terminate();
       } else {
+        // console.log(`Sending ping to WebSocket connection ${c.id}.`);
         c.alive = false;
         c.ws.ping();
       }
