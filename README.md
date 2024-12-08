@@ -63,3 +63,9 @@ Imagine turning the mundane task of cleaning into a thrilling business adventure
 - **Login:** Existing users can use the login feature to restore their progress and continue playing. They may also log out when they are done and their data is saved properly.
 - **Credentials:** User credentials and game information are encrypted and stored in the database. Information is received from the database while using the application for proper functionality.
 - **Restricts Functionality:** Users cannot access the game, leaderboard, or achievements if they are not logged in. If they are logged in, they cannot attempt to log in again.
+## WebSocket Deliverable
+- **Backend listens for WebSocket connection:** The backend server sets up a WebSocket server to listen for connections.
+- **Frontend makes WebSocket connection:** The frontend creates a socket and sends messages to the WebSocket server.
+- **Data sent over Websocket Connection:** When a user purchases a rock from the store, a message is sent to the server stating what the user has done to all other connected clients.
+- **WebSocket data displayed:** When a client receives a message from the server, it is shown in the bottom right of the screen for 10 seconds, and then disappears. 
+- **Full Functionality:** All visible elements of the application are functional and fulfill their purpose from each deliverable. Note that achievements were removed from the frontend because I did not find them necessary for any of the deliverables. All other app and game functionality now works!
