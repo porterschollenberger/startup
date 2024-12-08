@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useGame } from '../GameContext';
 import './Navigation.css';
 
 function Navigation() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
     const { saveGameState, setGameState, setUsername, setIsGameLoaded } = useGame();
@@ -51,10 +52,14 @@ function Navigation() {
         }
     };
 
+    const toggleMenu = () => {
+        setIsMenuOpen(prev => !prev);
+    };
+
     return (
         <nav>
-            <i className="fa-solid fa-bars"></i>
-            <ul className="nav-list">
+            <i className="fa-solid fa-bars" onClick={toggleMenu}></i>
+            <ul className={`nav-list ${isMenuOpen ? 'active' : ''}`}>
                 <li><Link to="/play">Play</Link></li>
                 <li><Link to="/leaderboard">Leaderboard</Link></li>
                 <li><Link to="/achievements">Achievements</Link></li>

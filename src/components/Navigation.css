@@ -4,6 +4,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 nav ul {
     list-style-type: none;
@@ -11,6 +12,7 @@ nav ul {
     margin: 0;
     display: flex;
     justify-content: center;
+    transition: all 0.3s ease-in-out;
 }
 nav ul li {
     margin: 0 1rem;
@@ -21,6 +23,7 @@ nav ul li a {
 }
 .fa-bars {
     display: none;
+    cursor: pointer;
 }
 button {
     background-color: var(--color-blue);
@@ -35,9 +38,18 @@ button {
 @media (max-width: 800px) {
     .nav-list {
         display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 45px;
+        left: 0;
+        width: 100%;
+        background-color: var(--color-light-blue);
+    }
+    .nav-list.active {
+        display: flex;
     }
     .account-info li:nth-child(1) {
-        display: none;
+        display: block;
     }
     .fa-bars {
         display: block;
