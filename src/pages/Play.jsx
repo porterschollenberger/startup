@@ -10,7 +10,7 @@ function Play() {
     const [moneyPerTick, setMoneyPerTick] = useState(0);
     const [moneyMultiplier, setMoneyMultiplier] = useState(1);
     const [ticksPerSecond, setTicksPerSecond] = useState(1);
-    const [items, setItems] = useState({
+    const startingItems = {
         rags: [
             {name: "Old Rag", basePrice: 1, owned: 0, moneyPerTick: 0.30},
             {name: "Basic Rag", basePrice: 15, owned: 0, moneyPerTick: 1},
@@ -29,8 +29,28 @@ function Play() {
             {name: "Hard Worker", basePrice: 100000, owned: 0, tickIncrease: 50},
             {name: "Super Worker", basePrice: 350000000, owned: 0, tickIncrease: 1000},
         ],
-    });
+    }
+    const [items, setItems] = useState(startingItems);
     const [animatingItems, setAnimatingItems] = useState({});
+    const [rocksOwned, setRocksOwned] = useState(0);
+    const [rockPrice, setRockPrice] = useState(10);
+
+    const buyRock = () => {
+        if (money >= rockPrice) {
+            setMoney(prevMoney => prevMoney - rockPrice);
+            setRocksOwned(prev => prev + 1);
+            resetGame();
+            setRockPrice(prevPrice => prevPrice * 10);
+        }
+    };
+
+    const resetGame = () => {
+        setMoney(1);
+        setMoneyPerTick(0);
+        setMoneyMultiplier(1);
+        setTicksPerSecond(1);
+        setItems(startingItems);
+    };
 
     const loadGameState = async (username) => {
         try {
@@ -200,6 +220,13 @@ function Play() {
                         ))}
                     </div>
                 ))}
+            </div>
+            <div className={`item-card rock`} onClick={buyRock}>
+                <img src="/the_prestigious_rock.jpeg" alt="The Prestigious Rock"/>
+                <h3>The Prestigious Rock</h3>
+                <p>Reset the game for literally no reason, but tell everyone you did so!</p>
+                <p className="price">{formatMoney(rockPrice)}</p>
+                <p className="owned">You own: {rocksOwned}</p>
             </div>
         </main>
     );

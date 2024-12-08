@@ -73,6 +73,9 @@ main.play-page {
     font-style: italic;
     color: #666;
 }
+.rock {
+    margin-top: 20px;
+}
 @media (max-width: 800px) {
     .items-container {
         flex-direction: column;
