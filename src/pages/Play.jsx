@@ -34,15 +34,14 @@ function Play() {
     const [items, setItems] = useState(startingItems);
     const [animatingItems, setAnimatingItems] = useState({});
     const [rocksOwned, setRocksOwned] = useState(0);
-    const [rockPrice, setRockPrice] = useState(10);
     const [notifications, setNotifications] = useState([]);
 
     const buyRock = async () => {
+        let rockPrice = Math.pow(10, rocksOwned);
         if (money >= rockPrice) {
             setMoney(prevMoney => prevMoney - rockPrice);
             setRocksOwned(prev => prev + 1);
             resetGame();
-            setRockPrice(prevPrice => prevPrice * 10);
 
             let username = ""
             const response = await fetch('/api/check', { credentials: 'include' });
@@ -103,6 +102,7 @@ function Play() {
                     moneyMultiplier,
                     ticksPerSecond,
                     items,
+                    rocksOwned,
                 };
             }
         } catch (error) {
@@ -126,6 +126,7 @@ function Play() {
                             setMoneyMultiplier(savedState.moneyMultiplier);
                             setTicksPerSecond(savedState.ticksPerSecond);
                             setItems(savedState.items);
+                            setRocksOwned(savedState.rocksOwned);
                         }
                         setIsGameLoaded(true);
                     } else {
@@ -195,8 +196,9 @@ function Play() {
             moneyMultiplier,
             ticksPerSecond,
             items,
+            rocksOwned
         });
-    }, [money, moneyPerTick, moneyMultiplier, ticksPerSecond, items]);
+    }, [money, moneyPerTick, moneyMultiplier, ticksPerSecond, items, rocksOwned]);
 
     useEffect(() => {
         if (isGameLoaded) {
@@ -279,7 +281,7 @@ function Play() {
                 <img src="/the_prestigious_rock.jpeg" alt="The Prestigious Rock"/>
                 <h3>The Prestigious Rock</h3>
                 <p>Reset the game for literally no reason, but tell everyone you did so!</p>
-                <p className="price">{formatMoney(rockPrice)}</p>
+                <p className="price">{formatMoney(Math.pow(10, rocksOwned))}</p>
                 <p className="owned">You own: {rocksOwned}</p>
             </div>
         </main>
