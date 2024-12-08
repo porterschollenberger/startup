@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const DB = require('./database.js');
+const {peerProxy} = require("./peerProxy");
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
@@ -134,6 +135,8 @@ function setAuthCookie(res, authToken) {
 }
 
 // Start the server
-app.listen(port, () => {
+const httpService = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+    peerProxy(httpService);
+    console.log("WebSocket server has been set up");
 });
