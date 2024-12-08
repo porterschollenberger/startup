@@ -60,8 +60,20 @@ function Play() {
             GameNotifier.broadcastEvent(username, GameEvent.Rock, {
                 message: `${username} purchased a Prestigious Rock!`,
             });
+
+            animateRockPurchase('success');
+        } else {
+            animateRockPurchase('fail');
         }
     };
+
+    const animateRockPurchase = (result) => {
+        setAnimatingItems(prev => ({ ...prev, rock: result }));
+        setTimeout(() => {
+            setAnimatingItems(prev => ({ ...prev, rock: null }));
+        }, 500);
+    };
+
 
     const resetGame = () => {
         setMoney(1);
@@ -277,7 +289,10 @@ function Play() {
                     </div>
                 ))}
             </div>
-            <div className={`item-card rock`} onClick={buyRock}>
+            <div className={`item-card rock ${
+                            animatingItems['rock'] === 'success' ? 'purchase-success' :
+                            animatingItems['rock'] === 'fail' ? 'purchase-fail' : ''
+                            }`} onClick={buyRock}>
                 <img src="/the_prestigious_rock.jpeg" alt="The Prestigious Rock"/>
                 <h3>The Prestigious Rock</h3>
                 <p>Reset the game for literally no reason, but tell everyone you did so!</p>
